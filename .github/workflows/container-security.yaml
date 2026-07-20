@@ -1,0 +1,24 @@
+name: Container Security
+
+on:
+  workflow_call:
+
+jobs:
+
+  grype:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v7
+
+      - name: Build Docker image
+        run: docker build -t financial-api:latest .
+
+      - name: Install Grype
+        uses: anchore/scan-action@v6
+        with:
+          image: financial-api:latest
+          fail-build: true
+          severity-cutoff: high
