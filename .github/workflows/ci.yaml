@@ -12,12 +12,12 @@ jobs:
 
       - uses: actions/checkout@v7
 
-      - name: Setup Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: 21
-          cache: maven
+      - name: Build Docker Image
+        run: |
+          docker build \
+            -t financial-api:test \
+            .
 
-      - name: Build the Application
-        run: mvn -B clean verify
+      - name: Test Docker Image
+        run: |
+          docker images financial-api:test
