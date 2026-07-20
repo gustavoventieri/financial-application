@@ -1,43 +1,13 @@
-name: Pipeline
+name: Deploy
 
 on:
-  push:
-    branches:
-      - master
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  security-events: write
+  workflow_call:
 
 jobs:
-  ci:
-    name: Continuous Integration
-    uses: ./.github/workflows/ci.yaml
-
-  security:
-    name: Dependency Security
-    needs: ci
-    uses: ./.github/workflows/code-security.yaml
-
-  codeql:
-    name: CodeQL Analysis
-    needs: ci
-    uses: ./.github/workflows/codeql.yaml
-
-  container:
-    name: Container Security
-    needs:
-      - ci
-      - security
-      - codeql
-    uses: ./.github/workflows/container-security.yaml
-
   deploy:
-    name: Deploy
-    needs:
-      - ci
-      - security
-      - codeql
-      - container
-    uses: ./.github/workflows/deploy.yaml
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy
+        run: |
+          echo "Deploying application..."
