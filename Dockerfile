@@ -1,33 +1,28 @@
-# ==========================
-# Stage 1 - Build
-# ==========================
-FROM maven:3.9.11-eclipse-temurin-21-alpine AS builder
-
+FROM sapmachine:21.0.11-ubuntu AS builder
 WORKDIR /app
-
-# Copia os POMs primeiro para aproveitar o cache
-COPY pom.xml .
-COPY core/pom.xml core/pom.xml
-COPY framework/pom.xml framework/pom.xml
-
-# Baixa as dependências
-RUN mvn dependency:go-offline -B
-
-# Copia o restante do projeto
 COPY . .
+RUN chmod +x mvnw
+RUN ./mvnw clean package -DskipTests
 
-# Compila apenas o módulo framework e suas dependências
-RUN mvn clean package -pl framework -am -DskipTests
-
-# ==========================
-# Stage 2 - Runtime
-# ==========================
-FROM eclipse-temurin:21-jre-alpine
-
+FROM sapmachine:21.0.11-jre-ubuntu AS runner
 WORKDIR /app
 
-COPY --from=builder /app/framework/target/*.jar app.jar
+RUN rm -f /etc/apt/sources.list.d/sapmachine.list \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates curl \
+    && apt-get install -y --only-upgrade libcap2 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-EXPOSE 8080
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+
+COPY --from=builder /app/target/app.jar ./app.jar
+RUN chown -R appuser:appuser /app
+
+USER appuser
+EXPOSE 31000
+
+HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
+    CMD curl -f http://localhost:31000/actuator/health || exit 1
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
