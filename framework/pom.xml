@@ -3,14 +3,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.1.0</version>
-        <relativePath/>
+        <groupId>com.financial</groupId>
+        <artifactId>api</artifactId>
+        <version>0.0.1</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <groupId>com.financial.api</groupId>
     <artifactId>framework</artifactId>
-    <version>0.0.1</version>
     <name>Finanancial APi Framework</name>
     <description>Finanancial APi Framework</description>
     <properties>
@@ -96,9 +95,10 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.financial.api</groupId>
+            <groupId>com.financial</groupId>
             <artifactId>core</artifactId>
             <version>0.0.1</version>
+            <scope>compile</scope>
         </dependency>
 
     </dependencies>
