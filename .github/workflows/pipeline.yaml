@@ -40,4 +40,4 @@ jobs:
       - security
       - codeql
       - container
-    uses: ./.github/workflows/pipeline.yaml
+    uses: ./.github/workflows/deploy.yaml
