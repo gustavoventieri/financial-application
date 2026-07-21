@@ -1,7 +1,33 @@
 package com.financial.api.framework.user.adapter.out;
 
 
+import com.financial.api.framework.user.adapter.cast.UserCast;
+import com.financial.api.framework.user.adapter.out.persistence.SpringUserDataRepository;
+import com.financial.api.user.application.port.out.UserAuthenticationPort;
 import com.financial.api.user.application.port.out.UserRepositoryPort;
+import com.financial.api.user.domain.User;
+import org.springframework.stereotype.Repository;
 
-public class UserRepositoryAdapter implements UserRepositoryPort {
+import java.util.Optional;
+
+@Repository
+public class UserRepositoryAdapter implements UserRepositoryPort, UserAuthenticationPort {
+
+    private final SpringUserDataRepository springUserDataRepository;
+
+    public UserRepositoryAdapter(SpringUserDataRepository springUserDataRepository){
+        this.springUserDataRepository = springUserDataRepository;
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return springUserDataRepository.findByEmail(email).map(UserCast::toDomain);
+    }
+
+    @Override
+    public User save(User user) {
+        return UserCast.toDomain(
+                springUserDataRepository.save(UserCast.toEntity(user))
+        );
+    }
 }

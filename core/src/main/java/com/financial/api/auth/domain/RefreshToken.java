@@ -1,4 +1,13 @@
 package com.financial.api.auth.domain;
 
-public record RefreshToken() {
+import java.time.LocalDateTime;
+
+public record RefreshToken(
+        String id,
+        String userId,
+        String tokenHash,
+        LocalDateTime expiresAt,
+        LocalDateTime createdAt,
+        LocalDateTime revokedAt
+) {
 }

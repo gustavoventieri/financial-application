@@ -1,0 +1,33 @@
+package com.financial.api.framework.user.adapter.cast;
+
+import com.financial.api.framework.user.adapter.out.persistence.UserEntity;
+import com.financial.api.user.domain.User;
+
+public class UserCast {
+
+    public static UserEntity toEntity(User user) {
+        return UserEntity.builder()
+                .id(user.id())
+                .name(user.name())
+                .email(user.email())
+                .password(user.password())
+                .role(user.role())
+                .verified(user.isVerified())
+                .createdAt(user.createdAt())
+                .updatedAt(user.updatedAt())
+                .build();
+    }
+
+    public static User toDomain(UserEntity entity) {
+        return new User(
+                entity.getId(),
+                entity.getName(),
+                entity.getEmail(),
+                entity.getPassword(),
+                entity.getRole(),
+                entity.isVerified(),
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
+        );
+    }
+}
