@@ -4,5 +4,5 @@ import com.financial.api.auth.application.dto.request.SignInRequest;
 import com.financial.api.auth.application.dto.response.AuthResponse;
 
 public interface SignInUseCase {
-    AuthResponse execute(SignInRequest request);
+    AuthResponse execute(SignInRequest request, String ip, String device);
 }

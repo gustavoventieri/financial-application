@@ -1,6 +1,11 @@
 package com.financial.api.framework.auth.config.bean;
 
+import com.financial.api.auth.application.port.in.accessToken.GenerateAccessTokenUseCase;
+import com.financial.api.auth.application.port.in.password.ComparePasswordUseCase;
+import com.financial.api.auth.application.port.in.refresh.GenerateRefreshTokenUseCase;
+import com.financial.api.auth.application.port.in.refresh.HashRefreshTokenUseCase;
 import com.financial.api.auth.application.port.in.sign.SignInUseCase;
+import com.financial.api.auth.application.port.out.RefreshTokenRepositoryPort;
 import com.financial.api.auth.application.service.SignInService;
 import com.financial.api.user.application.port.out.UserAuthenticationPort;
 import org.springframework.context.annotation.Bean;
@@ -11,8 +16,20 @@ public class SignInBeanConfig {
 
     @Bean
     public SignInUseCase signInUseCase(
-            UserAuthenticationPort userAuthenticationPort
+            UserAuthenticationPort userAuthenticationPort,
+            ComparePasswordUseCase comparePasswordUseCase,
+            HashRefreshTokenUseCase hashRefreshTokenUseCase,
+            GenerateRefreshTokenUseCase generateRefreshTokenUseCase,
+            GenerateAccessTokenUseCase generateAccessTokenUseCase,
+            RefreshTokenRepositoryPort refreshTokenRepositoryPort
     ) {
-        return new SignInService(userAuthenticationPort);
+        return new SignInService(
+                userAuthenticationPort,
+                comparePasswordUseCase,
+                hashRefreshTokenUseCase,
+                generateRefreshTokenUseCase,
+                generateAccessTokenUseCase,
+                refreshTokenRepositoryPort
+        );
     }
 }
