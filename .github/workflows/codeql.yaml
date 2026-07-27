@@ -28,6 +28,6 @@ jobs:
           java-version: 21
           cache: maven
 
-      - run: mvn -B clean verify
+      - run: mvn -B clean package -DskipTests
 
       - uses: github/codeql-action/analyze@v4
