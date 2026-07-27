@@ -16,9 +16,10 @@ jobs:
       - name: Build Docker image
         run: docker build -t financial-api:latest .
 
-      - name: Install Grype
+      - name: Run Grype
         uses: anchore/scan-action@v6
         with:
           image: financial-api:latest
           fail-build: true
           severity-cutoff: high
+          output-format: "table"
