@@ -26,11 +26,22 @@ spring:
         jdbc:
           time_zone: UTC
 
+springdoc:
+  scalar:
+    enabled: true
+    theme: dark
+
+
 server:
   port: ${APP_PORT}
+  servlet:
+    context-path: /api/v1
 
 app:
   jwt:
     secret: ${JWT_SECRET}
     issuer: ${JWT_ISSUER}
     expiration: ${JWT_EXPIRATION_TIME}
+  security:
+    bcrypt:
+      strength: 12

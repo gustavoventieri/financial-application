@@ -4,7 +4,9 @@ import com.financial.api.user.application.port.in.CreateUserUseCase;
 import com.financial.api.user.application.port.in.DeleteUserByIdUseCase;
 import com.financial.api.user.application.port.in.FindUserByEmailUseCase;
 import com.financial.api.user.application.port.in.FindUserByIdUseCase;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
+@SecurityRequirement(name = "Bearer Authentication")
 public class UserController {
 
    private final CreateUserUseCase createUserUseCase;
