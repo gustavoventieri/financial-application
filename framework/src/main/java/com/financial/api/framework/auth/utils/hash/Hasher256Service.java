@@ -1,4 +1,4 @@
-package com.financial.api.framework.shared.security.hash;
+package com.financial.api.framework.auth.utils.hash;
 
 import org.springframework.stereotype.Component;
 

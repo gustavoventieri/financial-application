@@ -1,7 +1,7 @@
-package com.financial.api.framework.shared.security.token;
+package com.financial.api.framework.auth.utils.token;
 
 import com.financial.api.auth.application.port.in.emailVerification.HashEmailVerificationTokenUseCase;
-import com.financial.api.framework.shared.security.hash.Hasher256Service;
+import com.financial.api.framework.auth.utils.hash.Hasher256Service;
 import org.springframework.stereotype.Component;
 
 @Component

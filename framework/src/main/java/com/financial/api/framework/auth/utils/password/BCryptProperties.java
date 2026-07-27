@@ -1,4 +1,4 @@
-package com.financial.api.framework.shared.security.password;
+package com.financial.api.framework.auth.utils.password;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

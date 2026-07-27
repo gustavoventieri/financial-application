@@ -1,17 +1,20 @@
-<html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
 <body>
 
 <h1>Welcome to Financial API</h1>
 
-<p>
-    Your verification code is:
-</p>
+<p>Your verification code is:</p>
 
-<h2>{{otpCode}}</h2>
+<h2 th:text="${otpCode}">
+    123456
+</h2>
 
 <p>
     This code expires in 10 minutes.
 </p>
 
 </body>
+
 </html>

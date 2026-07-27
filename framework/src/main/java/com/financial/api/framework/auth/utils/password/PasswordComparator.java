@@ -1,4 +1,4 @@
-package com.financial.api.framework.shared.security.password;
+package com.financial.api.framework.auth.utils.password;
 
 import com.financial.api.auth.application.port.in.password.ComparePasswordUseCase;
 import org.springframework.stereotype.Component;

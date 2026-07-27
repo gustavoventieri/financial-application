@@ -1,4 +1,4 @@
-package com.financial.api.framework.shared.security.token;
+package com.financial.api.framework.auth.utils.token;
 
 import com.financial.api.auth.application.port.in.emailVerification.GenerateEmailVerificationTokenUseCase;
 import org.springframework.stereotype.Component;

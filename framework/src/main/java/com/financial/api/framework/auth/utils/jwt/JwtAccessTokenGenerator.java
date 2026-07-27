@@ -1,4 +1,4 @@
-package com.financial.api.framework.shared.security.jwt;
+package com.financial.api.framework.auth.utils.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
