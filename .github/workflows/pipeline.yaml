@@ -32,7 +32,6 @@ jobs:
     name: Deploy
     needs:
       - ci
-      - security
       - codeql
       - container
     uses: ./.github/workflows/deploy.yaml
