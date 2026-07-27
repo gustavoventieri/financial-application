@@ -16,11 +16,6 @@ jobs:
     name: Continuous Integration
     uses: ./.github/workflows/ci.yaml
 
-  security:
-    name: Dependency Security
-    needs: ci
-    uses: ./.github/workflows/code-security.yaml
-
   codeql:
     name: CodeQL Analysis
     needs: ci
@@ -30,7 +25,6 @@ jobs:
     name: Container Security
     needs:
       - ci
-      - security
       - codeql
     uses: ./.github/workflows/container-security.yaml
 

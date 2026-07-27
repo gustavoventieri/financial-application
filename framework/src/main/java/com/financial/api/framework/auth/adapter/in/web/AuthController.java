@@ -37,8 +37,6 @@ public class AuthController {
     }
 
 
-
-
     // Helpers
     private String getDevice(HttpServletRequest request) {
         return request.getHeader("User-Agent");
