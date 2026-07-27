@@ -1,6 +1,6 @@
 package com.financial.api.auth.application.service;
 
-import com.financial.api.auth.application.dto.request.SignInRequest;
+
 import com.financial.api.auth.application.dto.response.AuthResponse;
 import com.financial.api.auth.application.port.in.accessToken.GenerateAccessTokenUseCase;
 import com.financial.api.auth.application.port.in.password.ComparePasswordUseCase;
@@ -41,16 +41,16 @@ public class SignInService implements SignInUseCase {
     }
 
     @Override
-    public AuthResponse execute(SignInRequest request, String ip, String device) {
+    public AuthResponse execute(String email, String password, String ip, String device) {
 
-        User user = userAuthenticationPort.findByEmail(request.email())
+        User user = userAuthenticationPort.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("Email or Password Invalid"));
 
 
         if (!user.isVerified()) throw new BusinessException("Email not verified yet");
 
         boolean passwordMatches = comparePasswordUseCase.execute(
-                request.password(),
+                password,
                 user.password()
         );
 

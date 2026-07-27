@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 @Builder(toBuilder = true)
 public record RefreshToken(
-        String id,
+        Long id,
         String userId,
         String tokenHash,
         String ip,
