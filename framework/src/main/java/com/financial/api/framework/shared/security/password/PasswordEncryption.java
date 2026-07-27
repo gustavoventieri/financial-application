@@ -1,17 +1,14 @@
-package com.financial.api.framework.shared.password;
-
-import com.financial.api.auth.application.port.in.password.HashPasswordUseCase;
-import org.springframework.stereotype.Component;
+package com.financial.api.framework.shared.security.password;
 
 import com.financial.api.auth.application.port.in.password.HashPasswordUseCase;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PasswordHasher implements HashPasswordUseCase {
+public class PasswordEncryption implements HashPasswordUseCase {
 
     private final BCryptProvider bcryptProvider;
 
-    public PasswordHasher(BCryptProvider bcryptProvider) {
+    public PasswordEncryption(BCryptProvider bcryptProvider) {
         this.bcryptProvider = bcryptProvider;
     }
 

@@ -1,4 +1,4 @@
-package com.financial.api.framework.shared.jwt;
+package com.financial.api.framework.shared.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;

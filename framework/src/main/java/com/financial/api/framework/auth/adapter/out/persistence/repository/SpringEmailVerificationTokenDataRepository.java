@@ -10,4 +10,6 @@ import java.util.Optional;
 @Repository
 public interface SpringEmailVerificationTokenDataRepository extends JpaRepository<EmailVerificationTokenEntity, Long> {
     Optional<EmailVerificationTokenEntity> findByUserId(String userId);
+
+    void deleteByUserId(String id);
 }

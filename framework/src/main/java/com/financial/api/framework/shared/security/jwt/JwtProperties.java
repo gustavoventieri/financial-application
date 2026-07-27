@@ -1,4 +1,4 @@
-package com.financial.api.framework.shared.jwt;
+package com.financial.api.framework.shared.security.jwt;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

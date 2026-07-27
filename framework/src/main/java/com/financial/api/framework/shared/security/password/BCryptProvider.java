@@ -1,4 +1,4 @@
-package com.financial.api.framework.shared.password;
+package com.financial.api.framework.shared.security.password;
 
 
 

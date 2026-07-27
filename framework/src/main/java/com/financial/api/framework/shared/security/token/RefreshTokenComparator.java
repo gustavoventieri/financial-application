@@ -1,4 +1,4 @@
-package com.financial.api.framework.shared.token;
+package com.financial.api.framework.shared.security.token;
 
 import com.financial.api.auth.application.port.in.refresh.CompareRefreshTokenUseCase;
 import com.financial.api.auth.application.port.in.refresh.HashRefreshTokenUseCase;

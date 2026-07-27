@@ -27,4 +27,9 @@ public class EmailVerificationTokenAdapter implements EmailVerificationTokenPort
     public Optional<EmailVerificationToken> findByUserId(String userId) {
         return springEmailVerificationTokenDataRepository.findByUserId(userId).map(EmailVerificationTokenCast::toDomain);
     }
+
+    @Override
+    public void deleteByUserId(String userId) {
+        springEmailVerificationTokenDataRepository.deleteByUserId(userId);
+    }
 }

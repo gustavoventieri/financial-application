@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 public class SignInBeanConfig {
 
     @Bean
-    public SignInUseCase signInUseCase(
+    public SignInUseCase signInUseCaseBean(
             UserAuthenticationPort userAuthenticationPort,
             ComparePasswordUseCase comparePasswordUseCase,
             HashRefreshTokenUseCase hashRefreshTokenUseCase,

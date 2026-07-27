@@ -1,0 +1,19 @@
+package com.financial.api.framework.shared.security.token;
+
+import com.financial.api.auth.application.port.in.emailVerification.HashEmailVerificationTokenUseCase;
+import com.financial.api.framework.shared.security.hash.Hasher256Service;
+import org.springframework.stereotype.Component;
+
+@Component
+public class EmailVerificationTokenHash implements HashEmailVerificationTokenUseCase {
+    private final Hasher256Service sha256Hasher;
+
+    public EmailVerificationTokenHash(Hasher256Service sha256Hasher) {
+        this.sha256Hasher = sha256Hasher;
+    }
+
+    @Override
+    public String execute(String otpCode) {
+        return sha256Hasher.hash(otpCode);
+    }
+}

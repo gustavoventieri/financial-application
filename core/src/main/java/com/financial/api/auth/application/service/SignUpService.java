@@ -1,31 +1,57 @@
 package com.financial.api.auth.application.service;
 
 import com.financial.api.auth.application.port.in.emailVerification.GenerateEmailVerificationTokenUseCase;
+import com.financial.api.auth.application.port.in.emailVerification.HashEmailVerificationTokenUseCase;
 import com.financial.api.auth.application.port.in.password.HashPasswordUseCase;
 import com.financial.api.auth.application.port.in.sign.SignUpUseCase;
+import com.financial.api.auth.application.port.out.EmailVerificationTokenPort;
 import com.financial.api.auth.domain.EmailVerificationToken;
-import com.financial.api.shared.enumerated.Roles;
+import com.financial.api.shared.email.EmailMessage;
+import com.financial.api.shared.email.EmailTemplateUseCase;
 import com.financial.api.shared.exception.BusinessException;
+import com.financial.api.shared.email.EmailPort;
+import com.financial.api.shared.transaction.TransactionManager;
 import com.financial.api.user.application.port.out.UserAuthenticationPort;
+import com.financial.api.user.application.port.out.UserRepositoryPort;
 import com.financial.api.user.domain.User;
-
-import java.time.LocalDateTime;
-
 
 public class SignUpService implements SignUpUseCase {
 
+    private static final String SUCCESS_MESSAGE =
+            "If the registration can proceed, a verification code has been sent to the provided email.";
+
     private final UserAuthenticationPort userAuthenticationPort;
+    private final UserRepositoryPort userRepositoryPort;
+    private final EmailVerificationTokenPort emailVerificationTokenRepositoryPort;
+
     private final HashPasswordUseCase hashPasswordUseCase;
     private final GenerateEmailVerificationTokenUseCase generateEmailVerificationTokenUseCase;
+    private final HashEmailVerificationTokenUseCase hashEmailVerificationTokenUseCase;
+
+    private final EmailPort emailPort;
+    private final EmailTemplateUseCase emailTemplateUseCase;
+    private final TransactionManager transactionManager;
 
     public SignUpService(
             UserAuthenticationPort userAuthenticationPort,
+            UserRepositoryPort userRepositoryPort,
+            EmailVerificationTokenPort emailVerificationTokenRepositoryPort,
             HashPasswordUseCase hashPasswordUseCase,
-            GenerateEmailVerificationTokenUseCase generateEmailVerificationTokenUseCase
-    ){
+            GenerateEmailVerificationTokenUseCase generateEmailVerificationTokenUseCase,
+            HashEmailVerificationTokenUseCase hashEmailVerificationTokenUseCase,
+            EmailPort emailPort,
+            EmailTemplateUseCase emailTemplateUseCase,
+            TransactionManager transactionManager
+    ) {
         this.userAuthenticationPort = userAuthenticationPort;
+        this.userRepositoryPort = userRepositoryPort;
+        this.emailVerificationTokenRepositoryPort = emailVerificationTokenRepositoryPort;
         this.hashPasswordUseCase = hashPasswordUseCase;
         this.generateEmailVerificationTokenUseCase = generateEmailVerificationTokenUseCase;
+        this.hashEmailVerificationTokenUseCase = hashEmailVerificationTokenUseCase;
+        this.emailPort = emailPort;
+        this.emailTemplateUseCase = emailTemplateUseCase;
+        this.transactionManager = transactionManager;
     }
 
     @Override
@@ -34,33 +60,53 @@ public class SignUpService implements SignUpUseCase {
         User user = userAuthenticationPort.findByEmail(email).orElse(null);
 
         if (user != null) {
+
             if (user.isVerified()) {
                 throw new BusinessException("Email already registered");
             }
-            handlePendingRegistration(user, name, password);
-            return "If the registration can proceed, a verification code has been sent to the provided email.";
-        }
 
+            handlePendingRegistration(user, name, password);
+
+            return SUCCESS_MESSAGE;
+        }
 
         String hashedPassword = hashPasswordUseCase.execute(password);
 
-        User newUser = User.builder()
-                .name(name)
-                .email(email)
-                .password(hashedPassword)
-                .role(Roles.USER)
-                .isVerified(false)
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .build();
+        String otpCode = generateEmailVerificationTokenUseCase.execute();
 
-        EmailVerificationToken emailVerificationToken = EmailVerificationToken.
+        String otpHash = hashEmailVerificationTokenUseCase.execute(otpCode);
 
-        return "";
+        User newUser = User.create(
+                name,
+                email,
+                hashedPassword
+        );
 
+        transactionManager.execute(() -> {
+
+            userRepositoryPort.save(newUser);
+
+            EmailVerificationToken emailVerificationToken =
+                    EmailVerificationToken.create(
+                            newUser.id(),
+                            otpHash
+                    );
+
+            emailVerificationTokenRepositoryPort.save(emailVerificationToken);
+
+            return null;
+        });
+
+        emailPort.send(
+                new EmailMessage(
+                        newUser.email(),
+                        "Verify your account",
+                        emailTemplateUseCase.buildVerificationEmail(otpCode)
+                )
+        );
+
+        return SUCCESS_MESSAGE;
     }
-
-
 
     private void handlePendingRegistration(
             User user,
@@ -68,5 +114,40 @@ public class SignUpService implements SignUpUseCase {
             String password
     ) {
 
+        String hashedPassword = hashPasswordUseCase.execute(password);
+
+        String otpCode = generateEmailVerificationTokenUseCase.execute();
+
+        String otpHash = hashEmailVerificationTokenUseCase.execute(otpCode);
+
+        User updatedUser = user.updateRegistration(
+                name,
+                hashedPassword
+        );
+
+        transactionManager.execute(() -> {
+
+            userRepositoryPort.save(updatedUser);
+
+            emailVerificationTokenRepositoryPort.deleteByUserId(updatedUser.id());
+
+            EmailVerificationToken token =
+                    EmailVerificationToken.create(
+                            updatedUser.id(),
+                            otpHash
+                    );
+
+            emailVerificationTokenRepositoryPort.save(token);
+
+            return null;
+        });
+
+        emailPort.send(
+                new EmailMessage(
+                        updatedUser.email(),
+                        "Verify your account",
+                        emailTemplateUseCase.buildVerificationEmail(otpCode)
+                )
+        );
     }
 }

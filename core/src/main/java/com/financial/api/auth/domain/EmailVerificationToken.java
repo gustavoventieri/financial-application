@@ -3,16 +3,34 @@ package com.financial.api.auth.domain;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Builder(toBuilder = true)
 public record EmailVerificationToken(
-        Long id,
+        String id,
         String userId,
         String otpCode,
         LocalDateTime expiresAt,
         LocalDateTime createdAt,
         LocalDateTime usedAt
 ) {
+
+    public static EmailVerificationToken create(
+            String userId,
+            String otpHash
+    ) {
+
+        LocalDateTime now = LocalDateTime.now();
+
+        return EmailVerificationToken.builder()
+                .id(UUID.randomUUID().toString())
+                .userId(userId)
+                .otpCode(otpHash)
+                .createdAt(now)
+                .expiresAt(now.plusMinutes(10))
+                .build();
+    }
+
     public boolean isExpired() {
         return expiresAt.isBefore(LocalDateTime.now());
     }
@@ -22,13 +40,9 @@ public record EmailVerificationToken(
     }
 
     public EmailVerificationToken markAsUsed() {
-        return new EmailVerificationToken(
-                id,
-                userId,
-                otpCode,
-                expiresAt,
-                createdAt,
-                LocalDateTime.now()
-        );
+        return this.toBuilder()
+                .usedAt(LocalDateTime.now())
+                .build();
     }
+
 }
