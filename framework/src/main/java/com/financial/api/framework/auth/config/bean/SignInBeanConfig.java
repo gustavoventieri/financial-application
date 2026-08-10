@@ -7,6 +7,8 @@ import com.financial.api.auth.application.port.in.refresh.HashRefreshTokenUseCas
 import com.financial.api.auth.application.port.in.sign.SignInUseCase;
 import com.financial.api.auth.application.port.out.RefreshTokenRepositoryPort;
 import com.financial.api.auth.application.service.SignInService;
+import com.financial.api.shared.email.EmailPort;
+import com.financial.api.shared.email.EmailTemplateUseCase;
 import com.financial.api.user.application.port.out.UserAuthenticationPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +23,9 @@ public class SignInBeanConfig {
             HashRefreshTokenUseCase hashRefreshTokenUseCase,
             GenerateRefreshTokenUseCase generateRefreshTokenUseCase,
             GenerateAccessTokenUseCase generateAccessTokenUseCase,
-            RefreshTokenRepositoryPort refreshTokenRepositoryPort
+            RefreshTokenRepositoryPort refreshTokenRepositoryPort,
+            EmailPort emailPort,
+            EmailTemplateUseCase emailTemplateUseCase
     ) {
         return new SignInService(
                 userAuthenticationPort,
@@ -29,7 +33,9 @@ public class SignInBeanConfig {
                 hashRefreshTokenUseCase,
                 generateRefreshTokenUseCase,
                 generateAccessTokenUseCase,
-                refreshTokenRepositoryPort
+                refreshTokenRepositoryPort,
+                emailPort,
+                emailTemplateUseCase
         );
     }
 }

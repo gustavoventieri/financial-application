@@ -49,6 +49,7 @@ server:
   port: ${APP_PORT}
   servlet:
     context-path: /api/v1
+  forward-headers-strategy: native
 
 app:
   jwt:

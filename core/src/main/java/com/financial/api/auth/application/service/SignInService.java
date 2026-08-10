@@ -9,10 +9,16 @@ import com.financial.api.auth.application.port.in.refresh.HashRefreshTokenUseCas
 import com.financial.api.auth.application.port.in.sign.SignInUseCase;
 import com.financial.api.auth.application.port.out.RefreshTokenRepositoryPort;
 import com.financial.api.auth.domain.RefreshToken;
+import com.financial.api.shared.email.EmailMessage;
+import com.financial.api.shared.email.EmailPort;
+import com.financial.api.shared.email.EmailTemplateUseCase;
 import com.financial.api.shared.exception.BusinessException;
 import com.financial.api.shared.exception.NotFoundException;
 import com.financial.api.user.application.port.out.UserAuthenticationPort;
 import com.financial.api.user.domain.User;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 public class SignInService implements SignInUseCase {
@@ -24,6 +30,9 @@ public class SignInService implements SignInUseCase {
     private final HashRefreshTokenUseCase hashRefreshTokenUseCase;
     private final RefreshTokenRepositoryPort refreshTokenRepositoryPort;
 
+    private final EmailPort emailPort;
+    private final EmailTemplateUseCase emailTemplateUseCase;
+
 
     public SignInService(
             UserAuthenticationPort userAuthenticationPort,
@@ -31,13 +40,18 @@ public class SignInService implements SignInUseCase {
             HashRefreshTokenUseCase hashRefreshTokenUseCase,
             GenerateRefreshTokenUseCase generateRefreshTokenUseCase,
             GenerateAccessTokenUseCase generateAccessTokenUseCase,
-            RefreshTokenRepositoryPort refreshTokenRepositoryPort){
+            RefreshTokenRepositoryPort refreshTokenRepositoryPort,
+            EmailPort emailPort,
+            EmailTemplateUseCase emailTemplateUseCase
+        ){
         this.userAuthenticationPort = userAuthenticationPort;
         this.comparePasswordUseCase = comparePasswordUseCase;
         this.hashRefreshTokenUseCase = hashRefreshTokenUseCase;
         this.generateRefreshTokenUseCase = generateRefreshTokenUseCase;
         this.generateAccessTokenUseCase =  generateAccessTokenUseCase;
         this.refreshTokenRepositoryPort = refreshTokenRepositoryPort;
+        this.emailPort = emailPort;
+        this.emailTemplateUseCase = emailTemplateUseCase;
     }
 
     @Override
@@ -73,6 +87,21 @@ public class SignInService implements SignInUseCase {
         );
 
         refreshTokenRepositoryPort.save(entity);
+
+        emailPort.send(
+                new EmailMessage(
+                        user.email(),
+                        "New sign-in to your account",
+                        emailTemplateUseCase.buildNewLoginEmail(
+                                user.name(),
+                                device,
+                                ip,
+                                LocalDateTime.now().format(
+                                        DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm")
+                                )
+                        )
+                )
+        );
 
         return AuthResponse.builder()
                 .accessToken(accessToken)

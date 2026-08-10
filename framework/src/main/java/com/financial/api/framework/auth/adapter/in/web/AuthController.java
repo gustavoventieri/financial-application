@@ -4,6 +4,8 @@ package com.financial.api.framework.auth.adapter.in.web;
 import com.financial.api.auth.application.dto.response.AuthResponse;
 import com.financial.api.auth.application.port.in.sign.SignInUseCase;
 import com.financial.api.auth.application.port.in.sign.SignUpUseCase;
+import com.financial.api.auth.application.port.in.sign.VerifyEmailVerificationTokenUseCase;
+import com.financial.api.framework.auth.adapter.dto.EmailVerificationRequestValidator;
 import com.financial.api.framework.auth.adapter.dto.SignInRequestValidator;
 import com.financial.api.framework.auth.adapter.dto.SignUpRequestValidator;
 import com.financial.api.framework.shared.handler.dto.ErrorResponse;
@@ -31,14 +33,17 @@ public class AuthController {
 
     private final SignInUseCase signInUseCase;
     private final SignUpUseCase signUpUseCase;
+    private final VerifyEmailVerificationTokenUseCase verifyEmailVerificationTokenUseCase;
 
     public AuthController(
             SignInUseCase signInUseCase,
-            SignUpUseCase signUpUseCase
+            SignUpUseCase signUpUseCase,
+            VerifyEmailVerificationTokenUseCase verifyEmailVerificationTokenUseCase
     ){
 
         this.signInUseCase = signInUseCase;
         this.signUpUseCase = signUpUseCase;
+        this.verifyEmailVerificationTokenUseCase = verifyEmailVerificationTokenUseCase;
     }
 
 
@@ -72,7 +77,7 @@ public class AuthController {
         String ip = getClientIp(httpRequest);
         String device = getDevice(httpRequest);
 
-        AuthResponse response = signInUseCase.execute(request.email(), request.password(),ip, device);
+        AuthResponse response = signInUseCase.execute(request.email(), request.password(), ip, device);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -101,6 +106,54 @@ public class AuthController {
         String message = signUpUseCase.execute(request.name(), request.email(), request.password());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", message));
+    }
+
+
+    @Operation(
+            summary = "Verify email",
+            description = "Verify a user's email using the verification code and return access and refresh tokens."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Email verified successfully"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Verification code expired or already used",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Invalid verification code",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            )
+    })
+    @PostMapping("/verify-email")
+    public ResponseEntity<AuthResponse> verifyEmail(
+            @Valid @RequestBody EmailVerificationRequestValidator request,
+            HttpServletRequest httpRequest
+    ) {
+
+        String ip = getClientIp(httpRequest);
+        String device = getDevice(httpRequest);
+
+        AuthResponse response = verifyEmailVerificationTokenUseCase.execute(
+                request.codeOtp(),
+                request.email(),
+                ip,
+                device
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
     }
 
 

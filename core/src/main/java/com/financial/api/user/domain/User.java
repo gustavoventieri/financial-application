@@ -4,7 +4,9 @@ import com.financial.api.shared.enumerated.Roles;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Builder(toBuilder = true)
 public record User(
@@ -28,7 +30,7 @@ public record User(
 
         return User.builder()
                 .id(UUID.randomUUID().toString())
-                .name(name)
+                .name(formatName(name))
                 .email(email)
                 .password(hashedPassword)
                 .role(Roles.USER)
@@ -54,5 +56,11 @@ public record User(
                 .password(hashedPassword)
                 .updatedAt(LocalDateTime.now())
                 .build();
+    }
+
+    private static String formatName(String name) {
+        return Arrays.stream(name.trim().toLowerCase().split("\\s+"))
+                .map(word -> Character.toUpperCase(word.charAt(0)) + word.substring(1))
+                .collect(Collectors.joining(" "));
     }
 }

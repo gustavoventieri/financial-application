@@ -31,7 +31,7 @@ public class JwtAccessTokenGenerator implements GenerateAccessTokenUseCase {
                 .withSubject(userId)
                 .withClaim("role", role.name())
                 .withIssuedAt(Date.from(now))
-                .withExpiresAt(Date.from(now.plus(properties.accessTokenExpiration())))
+                .withExpiresAt(Date.from(now.plus(properties.expiration())))
                 .sign(algorithm);
     }
 }
