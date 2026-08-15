@@ -25,7 +25,6 @@ public class RefreshTokenEntity {
             unique = true,
             updatable = false
     )
-    @GeneratedValue(strategy = GenerationType.UUID)
     private String publicId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

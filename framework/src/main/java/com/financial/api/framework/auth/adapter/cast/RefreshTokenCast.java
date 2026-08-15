@@ -21,6 +21,7 @@ public class RefreshTokenCast {
                 .createdAt(token.createdAt())
                 .expiresAt(token.expiresAt())
                 .revokedAt(token.revokedAt())
+                .publicId(token.publicId())
                 .build();
     }
 
@@ -32,6 +33,7 @@ public class RefreshTokenCast {
                 entity.getTokenHash(),
                 entity.getIp(),
                 entity.getDevice(),
+                entity.getPublicId(),
                 entity.getCreatedAt(),
                 entity.getExpiresAt(),
                 entity.getRevokedAt()

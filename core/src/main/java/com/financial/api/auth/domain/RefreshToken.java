@@ -3,6 +3,7 @@ package com.financial.api.auth.domain;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Builder(toBuilder = true)
 public record RefreshToken(
@@ -11,6 +12,7 @@ public record RefreshToken(
         String tokenHash,
         String ip,
         String device,
+        String publicId,
         LocalDateTime createdAt,
         LocalDateTime expiresAt,
         LocalDateTime revokedAt
@@ -43,6 +45,7 @@ public record RefreshToken(
                 .tokenHash(tokenHash)
                 .ip(ip)
                 .device(device)
+                .publicId(UUID.randomUUID().toString())
                 .createdAt(now)
                 .expiresAt(now.plusDays(30))
                 .build();
