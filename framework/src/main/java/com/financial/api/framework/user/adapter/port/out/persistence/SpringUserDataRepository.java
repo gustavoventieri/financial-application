@@ -1,4 +1,4 @@
-package com.financial.api.framework.user.adapter.out.persistence;
+package com.financial.api.framework.user.adapter.port.out.persistence;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

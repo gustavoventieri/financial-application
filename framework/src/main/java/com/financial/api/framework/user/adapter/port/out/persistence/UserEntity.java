@@ -1,4 +1,4 @@
-    package com.financial.api.framework.user.adapter.out.persistence;
+    package com.financial.api.framework.user.adapter.port.out.persistence;
 
     import com.financial.api.shared.enumerated.Roles;
     import jakarta.persistence.*;

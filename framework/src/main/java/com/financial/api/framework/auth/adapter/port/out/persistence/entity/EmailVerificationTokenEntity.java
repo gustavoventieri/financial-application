@@ -1,6 +1,6 @@
-package com.financial.api.framework.auth.adapter.out.persistence.entity;
+package com.financial.api.framework.auth.adapter.port.out.persistence.entity;
 
-import com.financial.api.framework.user.adapter.out.persistence.UserEntity;
+import com.financial.api.framework.user.adapter.port.out.persistence.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -1,8 +1,8 @@
 package com.financial.api.framework.auth.adapter.cast;
 
 import com.financial.api.auth.domain.RefreshToken;
-import com.financial.api.framework.auth.adapter.out.persistence.entity.RefreshTokenEntity;
-import com.financial.api.framework.user.adapter.out.persistence.UserEntity;
+import com.financial.api.framework.auth.adapter.port.out.persistence.entity.RefreshTokenEntity;
+import com.financial.api.framework.user.adapter.port.out.persistence.UserEntity;
 
 public class RefreshTokenCast {
 

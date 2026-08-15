@@ -1,4 +1,4 @@
-package com.financial.api.framework.user.adapter.in.web;
+package com.financial.api.framework.user.adapter.port.in.web;
 
 import com.financial.api.user.application.port.in.CreateUserUseCase;
 import com.financial.api.user.application.port.in.DeleteUserByIdUseCase;

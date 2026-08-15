@@ -1,6 +1,6 @@
-package com.financial.api.framework.auth.adapter.out.persistence.entity;
+package com.financial.api.framework.auth.adapter.port.out.persistence.entity;
 
-import com.financial.api.framework.user.adapter.out.persistence.UserEntity;
+import com.financial.api.framework.user.adapter.port.out.persistence.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,6 +18,15 @@ public class RefreshTokenEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(
+            name = "public_id",
+            nullable = false,
+            unique = true,
+            updatable = false
+    )
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String publicId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)

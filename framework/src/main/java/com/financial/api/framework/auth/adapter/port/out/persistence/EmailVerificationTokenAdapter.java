@@ -1,9 +1,9 @@
-package com.financial.api.framework.auth.adapter.out.persistence;
+package com.financial.api.framework.auth.adapter.port.out.persistence;
 
 import com.financial.api.auth.application.port.out.EmailVerificationTokenPort;
 import com.financial.api.auth.domain.EmailVerificationToken;
 import com.financial.api.framework.auth.adapter.cast.EmailVerificationTokenCast;
-import com.financial.api.framework.auth.adapter.out.persistence.repository.SpringEmailVerificationTokenDataRepository;
+import com.financial.api.framework.auth.adapter.port.out.persistence.repository.SpringEmailVerificationTokenDataRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;

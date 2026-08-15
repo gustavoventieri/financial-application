@@ -8,4 +8,8 @@ public interface RefreshTokenPersistencePort {
 
     void save(RefreshToken refreshToken);
     Optional<RefreshToken> findRefreshTokenByHashRefreshToken(String refreshToken);
+    Optional<RefreshToken> findByPublicIdAndUserId(
+            String publicId,
+            String userId
+    );
 }

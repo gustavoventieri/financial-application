@@ -1,6 +1,6 @@
 package com.financial.api.framework.user.adapter.cast;
 
-import com.financial.api.framework.user.adapter.out.persistence.UserEntity;
+import com.financial.api.framework.user.adapter.port.out.persistence.UserEntity;
 import com.financial.api.user.domain.User;
 
 public class UserCast {

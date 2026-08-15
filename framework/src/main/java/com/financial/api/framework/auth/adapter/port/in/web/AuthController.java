@@ -1,4 +1,4 @@
-package com.financial.api.framework.auth.adapter.in.web;
+package com.financial.api.framework.auth.adapter.port.in.web;
 
 
 import com.financial.api.auth.application.dto.response.AuthResponse;
@@ -22,10 +22,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
 
@@ -39,13 +37,15 @@ public class AuthController {
     private final VerifyEmailVerificationTokenUseCase verifyEmailVerificationTokenUseCase;
     private final RefreshTokenUseCase refreshTokenUseCase;
     private final RevokeRefreshTokenUseCase revokeRefreshTokenUseCase;
+    private final SignOutUseCase signOutUseCase;
 
     public AuthController(
             SignInUseCase signInUseCase,
             SignUpUseCase signUpUseCase,
             VerifyEmailVerificationTokenUseCase verifyEmailVerificationTokenUseCase,
             RefreshTokenUseCase refreshTokenUseCase,
-            RevokeRefreshTokenUseCase revokeRefreshTokenUseCase
+            RevokeRefreshTokenUseCase revokeRefreshTokenUseCase,
+            SignOutUseCase signOutUseCase
 
     ){
 
@@ -54,6 +54,7 @@ public class AuthController {
         this.verifyEmailVerificationTokenUseCase = verifyEmailVerificationTokenUseCase;
         this.refreshTokenUseCase = refreshTokenUseCase;
         this.revokeRefreshTokenUseCase = revokeRefreshTokenUseCase;
+        this.signOutUseCase = signOutUseCase;
     }
 
 
@@ -174,7 +175,7 @@ public class AuthController {
                 .body(new ControllerResponseDTO<>("Email verified successfully", null));
     }
 
-    @PostMapping("/refresh")
+    @PostMapping("/sessions/refresh")
     @Operation(
             summary = "Refresh access token",
             description = "Generate a new access token using the refresh token stored in the authentication cookie."
@@ -222,10 +223,10 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/sign-out")
+    @PostMapping("/sessions/sign-out")
     @Operation(
             summary = "Logout",
-            description = "Revoke the current refresh token and clear authentication cookies."
+            description = "Revoke the current session and clear authentication cookies."
     )
     @ApiResponses({
             @ApiResponse(
@@ -250,7 +251,7 @@ public class AuthController {
 
         try {
 
-            revokeRefreshTokenUseCase.execute(refreshToken);
+            signOutUseCase.execute(refreshToken);
 
         } finally {
 
@@ -259,10 +260,55 @@ public class AuthController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new ControllerResponseDTO<>(
-                        "Logout successful",
-                        null
-                ));
+                .body(
+                        new ControllerResponseDTO<>(
+                                "Logout successful",
+                                null
+                        )
+                );
+    }
+
+    @DeleteMapping("/sessions/revoke/{sessionId}")
+    @Operation(
+            summary = "Revoke session",
+            description = "Revoke a specific authenticated session."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Session revoked successfully"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Session not found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(
+                                    implementation = ErrorResponse.class
+                            )
+                    )
+            )
+    })
+    public ResponseEntity<ControllerResponseDTO<String>> revokeSession(
+            @PathVariable String sessionId,
+            Authentication authentication
+    ) {
+
+        String userId = authentication.getName();
+
+        revokeRefreshTokenUseCase.execute(
+                sessionId,
+                userId
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(
+                        new ControllerResponseDTO<>(
+                                "Session revoked successfully",
+                                null
+                        )
+                );
     }
 
 

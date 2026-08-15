@@ -1,7 +1,7 @@
-package com.financial.api.framework.auth.adapter.out.persistence.repository;
+package com.financial.api.framework.auth.adapter.port.out.persistence.repository;
 
 
-import com.financial.api.framework.auth.adapter.out.persistence.entity.EmailVerificationTokenEntity;
+import com.financial.api.framework.auth.adapter.port.out.persistence.entity.EmailVerificationTokenEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

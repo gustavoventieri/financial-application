@@ -3,6 +3,7 @@ package com.financial.api.auth.application.service;
 import com.financial.api.auth.application.dto.response.AuthResponse;
 import com.financial.api.auth.application.port.in.accessToken.GenerateAccessTokenUseCase;
 import com.financial.api.auth.application.port.in.refresh.CompareRefreshTokenUseCase;
+import com.financial.api.auth.application.port.in.refresh.HashRefreshTokenUseCase;
 import com.financial.api.auth.application.port.in.sign.RefreshTokenUseCase;
 import com.financial.api.auth.application.port.out.RefreshTokenPersistencePort;
 import com.financial.api.auth.domain.RefreshToken;
@@ -19,24 +20,27 @@ public class RefreshTokenService implements RefreshTokenUseCase {
     private final UserAuthenticationPersistencePort userAuthenticationPersistencePort;
     private final CompareRefreshTokenUseCase compareRefreshTokenUseCase;
     private final GenerateAccessTokenUseCase generateAccessTokenUseCase;
+    private final HashRefreshTokenUseCase hashRefreshTokenUseCase;
 
     public RefreshTokenService(
             RefreshTokenPersistencePort refreshTokenRepositoryPort,
             UserAuthenticationPersistencePort userAuthenticationPersistencePort,
             CompareRefreshTokenUseCase compareRefreshTokenUseCase,
-            GenerateAccessTokenUseCase generateAccessTokenUseCase
+            GenerateAccessTokenUseCase generateAccessTokenUseCase,
+            HashRefreshTokenUseCase hashRefreshTokenUseCase
     ){
         this.refreshTokenRepositoryPort = refreshTokenRepositoryPort;
         this.compareRefreshTokenUseCase = compareRefreshTokenUseCase;
         this.generateAccessTokenUseCase = generateAccessTokenUseCase;
         this.userAuthenticationPersistencePort = userAuthenticationPersistencePort;
+        this.hashRefreshTokenUseCase = hashRefreshTokenUseCase;
     }
 
     @Override
     public AuthResponse execute(String refreshToken) {
 
         RefreshToken storedToken = refreshTokenRepositoryPort
-                .findRefreshTokenByHashRefreshToken(refreshToken)
+                .findRefreshTokenByHashRefreshToken(hashRefreshTokenUseCase.execute(refreshToken))
                 .orElseThrow(() ->
                         new NotFoundException("Invalid refresh token")
                 );
@@ -75,8 +79,5 @@ public class RefreshTokenService implements RefreshTokenUseCase {
         );
     }
 
-    @Override
-    public void revokeToken(String refreshToken) {
 
-    }
 }

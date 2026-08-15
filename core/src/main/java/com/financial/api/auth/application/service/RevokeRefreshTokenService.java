@@ -10,38 +10,29 @@ import com.financial.api.shared.exception.BusinessException;
 public class RevokeRefreshTokenService implements RevokeRefreshTokenUseCase {
 
     private final RefreshTokenPersistencePort refreshTokenRepositoryPort;
-    private final CompareRefreshTokenUseCase compareRefreshTokenUseCase;
 
     public RevokeRefreshTokenService(
-            RefreshTokenPersistencePort refreshTokenRepositoryPort,
-            CompareRefreshTokenUseCase compareRefreshTokenUseCase
+            RefreshTokenPersistencePort refreshTokenRepositoryPort
     ) {
         this.refreshTokenRepositoryPort = refreshTokenRepositoryPort;
-        this.compareRefreshTokenUseCase = compareRefreshTokenUseCase;
     }
 
     @Override
-    public void execute(String refreshToken) {
+    public void execute(String sessionId, String userId) {
 
-        RefreshToken storedToken = refreshTokenRepositoryPort
-                .findRefreshTokenByHashRefreshToken(refreshToken)
-                .orElseThrow(() ->
-                        new BusinessException("Invalid refresh token")
-                );
+        RefreshToken refreshToken =
+                refreshTokenRepositoryPort
+                        .findByPublicIdAndUserId(sessionId, userId)
+                        .orElseThrow(() ->
+                                new BusinessException("Session not found")
+                        );
 
-        if (storedToken.isRevoked()) {
-            throw new BusinessException("Refresh token already revoked");
-        }
-
-        if (!compareRefreshTokenUseCase.execute(
-                refreshToken,
-                storedToken.tokenHash()
-        )) {
-            throw new BusinessException("Invalid refresh token");
+        if (refreshToken.isRevoked()) {
+            throw new BusinessException("Session already revoked");
         }
 
         refreshTokenRepositoryPort.save(
-                storedToken.revoke()
+                refreshToken.revoke()
         );
     }
 }

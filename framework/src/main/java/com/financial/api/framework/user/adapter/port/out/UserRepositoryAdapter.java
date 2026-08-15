@@ -1,8 +1,8 @@
-package com.financial.api.framework.user.adapter.out;
+package com.financial.api.framework.user.adapter.port.out;
 
 
 import com.financial.api.framework.user.adapter.cast.UserCast;
-import com.financial.api.framework.user.adapter.out.persistence.SpringUserDataRepository;
+import com.financial.api.framework.user.adapter.port.out.persistence.SpringUserDataRepository;
 import com.financial.api.user.application.port.out.UserAuthenticationPersistencePort;
 import com.financial.api.user.application.port.out.UserRepositoryPort;
 import com.financial.api.user.domain.User;
