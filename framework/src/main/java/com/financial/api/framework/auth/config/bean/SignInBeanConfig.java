@@ -5,11 +5,12 @@ import com.financial.api.auth.application.port.in.password.ComparePasswordUseCas
 import com.financial.api.auth.application.port.in.refresh.GenerateRefreshTokenUseCase;
 import com.financial.api.auth.application.port.in.refresh.HashRefreshTokenUseCase;
 import com.financial.api.auth.application.port.in.sign.SignInUseCase;
-import com.financial.api.auth.application.port.out.RefreshTokenRepositoryPort;
+import com.financial.api.auth.application.port.out.RefreshTokenPersistencePort;
 import com.financial.api.auth.application.service.SignInService;
 import com.financial.api.shared.email.EmailPort;
 import com.financial.api.shared.email.EmailTemplateUseCase;
-import com.financial.api.user.application.port.out.UserAuthenticationPort;
+import com.financial.api.user.application.port.out.UserAuthenticationPersistencePort;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,12 +19,12 @@ public class SignInBeanConfig {
 
     @Bean
     public SignInUseCase signInUseCaseBean(
-            UserAuthenticationPort userAuthenticationPort,
+            UserAuthenticationPersistencePort userAuthenticationPort,
             ComparePasswordUseCase comparePasswordUseCase,
             HashRefreshTokenUseCase hashRefreshTokenUseCase,
             GenerateRefreshTokenUseCase generateRefreshTokenUseCase,
             GenerateAccessTokenUseCase generateAccessTokenUseCase,
-            RefreshTokenRepositoryPort refreshTokenRepositoryPort,
+            RefreshTokenPersistencePort refreshTokenRepositoryPort,
             EmailPort emailPort,
             EmailTemplateUseCase emailTemplateUseCase
     ) {

@@ -7,12 +7,12 @@ import com.financial.api.auth.application.port.in.refresh.HashRefreshTokenUseCas
 import com.financial.api.auth.application.port.in.sign.VerifyEmailVerificationTokenUseCase;
 
 import com.financial.api.auth.application.port.out.EmailVerificationTokenPort;
-import com.financial.api.auth.application.port.out.RefreshTokenRepositoryPort;
+import com.financial.api.auth.application.port.out.RefreshTokenPersistencePort;
 import com.financial.api.auth.application.service.VerifyEmailVerificationTokenService;
 import com.financial.api.shared.email.EmailPort;
 import com.financial.api.shared.email.EmailTemplateUseCase;
 import com.financial.api.shared.transaction.TransactionManager;
-import com.financial.api.user.application.port.out.UserAuthenticationPort;
+import com.financial.api.user.application.port.out.UserAuthenticationPersistencePort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,12 +21,12 @@ public class VerifyEmailVerificationTokenConfig {
 
     @Bean
     public VerifyEmailVerificationTokenUseCase verifyEmailVerificationTokenUseCase(
-            UserAuthenticationPort userAuthenticationPort,
+            UserAuthenticationPersistencePort userAuthenticationPort,
             EmailVerificationTokenPort emailVerificationTokenPort,
             GenerateAccessTokenUseCase generateAccessTokenUseCase,
             GenerateRefreshTokenUseCase generateRefreshTokenUseCase,
             HashRefreshTokenUseCase hashRefreshTokenUseCase,
-            RefreshTokenRepositoryPort refreshTokenRepositoryPort,
+            RefreshTokenPersistencePort refreshTokenRepositoryPort,
             HashEmailVerificationTokenUseCase hashEmailVerificationTokenUseCase,
             TransactionManager transactionManager,
             EmailPort emailPort,

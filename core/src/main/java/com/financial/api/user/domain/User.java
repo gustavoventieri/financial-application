@@ -16,6 +16,7 @@ public record User(
         String password,
         Roles role,
         boolean isVerified,
+        boolean isActive,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
@@ -35,6 +36,7 @@ public record User(
                 .password(hashedPassword)
                 .role(Roles.USER)
                 .isVerified(false)
+                .isActive(true)
                 .createdAt(now)
                 .updatedAt(now)
                 .build();
@@ -43,6 +45,13 @@ public record User(
     public User verify() {
         return this.toBuilder()
                 .isVerified(true)
+                .updatedAt(LocalDateTime.now())
+                .build();
+    }
+
+    public User inactivate() {
+        return this.toBuilder()
+                .isActive(false)
                 .updatedAt(LocalDateTime.now())
                 .build();
     }

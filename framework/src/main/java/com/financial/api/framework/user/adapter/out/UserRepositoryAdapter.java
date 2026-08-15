@@ -3,7 +3,7 @@ package com.financial.api.framework.user.adapter.out;
 
 import com.financial.api.framework.user.adapter.cast.UserCast;
 import com.financial.api.framework.user.adapter.out.persistence.SpringUserDataRepository;
-import com.financial.api.user.application.port.out.UserAuthenticationPort;
+import com.financial.api.user.application.port.out.UserAuthenticationPersistencePort;
 import com.financial.api.user.application.port.out.UserRepositoryPort;
 import com.financial.api.user.domain.User;
 import org.springframework.stereotype.Repository;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public class UserRepositoryAdapter implements UserRepositoryPort, UserAuthenticationPort {
+public class UserRepositoryAdapter implements UserRepositoryPort, UserAuthenticationPersistencePort {
 
     private final SpringUserDataRepository springUserDataRepository;
 
@@ -29,5 +29,10 @@ public class UserRepositoryAdapter implements UserRepositoryPort, UserAuthentica
         return UserCast.toDomain(
                 springUserDataRepository.save(UserCast.toEntity(user))
         );
+    }
+
+    @Override
+    public Optional<User> findById(String id) {
+        return springUserDataRepository.findById(id).map(UserCast::toDomain);
     }
 }

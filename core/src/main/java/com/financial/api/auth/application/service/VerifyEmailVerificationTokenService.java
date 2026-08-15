@@ -7,7 +7,7 @@ import com.financial.api.auth.application.port.in.refresh.GenerateRefreshTokenUs
 import com.financial.api.auth.application.port.in.refresh.HashRefreshTokenUseCase;
 import com.financial.api.auth.application.port.in.sign.VerifyEmailVerificationTokenUseCase;
 import com.financial.api.auth.application.port.out.EmailVerificationTokenPort;
-import com.financial.api.auth.application.port.out.RefreshTokenRepositoryPort;
+import com.financial.api.auth.application.port.out.RefreshTokenPersistencePort;
 import com.financial.api.auth.domain.EmailVerificationToken;
 import com.financial.api.auth.domain.RefreshToken;
 import com.financial.api.shared.email.EmailMessage;
@@ -15,17 +15,17 @@ import com.financial.api.shared.email.EmailPort;
 import com.financial.api.shared.email.EmailTemplateUseCase;
 import com.financial.api.shared.exception.BusinessException;
 import com.financial.api.shared.transaction.TransactionManager;
-import com.financial.api.user.application.port.out.UserAuthenticationPort;
+import com.financial.api.user.application.port.out.UserAuthenticationPersistencePort;
 import com.financial.api.user.domain.User;
 
 public class VerifyEmailVerificationTokenService implements VerifyEmailVerificationTokenUseCase {
 
-    private final UserAuthenticationPort userAuthenticationPort;
+    private final UserAuthenticationPersistencePort userAuthenticationPort;
     private final EmailVerificationTokenPort emailVerificationTokenPort;
     private final GenerateAccessTokenUseCase generateAccessTokenUseCase;
     private final GenerateRefreshTokenUseCase generateRefreshTokenUseCase;
     private final HashRefreshTokenUseCase hashRefreshTokenUseCase;
-    private final RefreshTokenRepositoryPort refreshTokenRepositoryPort;
+    private final RefreshTokenPersistencePort refreshTokenRepositoryPort;
     private final HashEmailVerificationTokenUseCase hashEmailVerificationTokenUseCase;
     private final TransactionManager transactionManager;
     private final EmailPort emailPort;
@@ -34,12 +34,12 @@ public class VerifyEmailVerificationTokenService implements VerifyEmailVerificat
 
 
     public VerifyEmailVerificationTokenService (
-            UserAuthenticationPort userAuthenticationPort,
+            UserAuthenticationPersistencePort userAuthenticationPort,
             EmailVerificationTokenPort emailVerificationTokenPort,
             GenerateAccessTokenUseCase generateAccessTokenUseCase,
             GenerateRefreshTokenUseCase generateRefreshTokenUseCase,
             HashRefreshTokenUseCase hashRefreshTokenUseCase,
-            RefreshTokenRepositoryPort refreshTokenRepositoryPort,
+            RefreshTokenPersistencePort refreshTokenRepositoryPort,
             HashEmailVerificationTokenUseCase hashEmailVerificationTokenUseCase,
             TransactionManager transactionManager,
             EmailPort emailPort,

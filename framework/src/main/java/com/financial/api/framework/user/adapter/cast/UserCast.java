@@ -13,6 +13,7 @@ public class UserCast {
                 .password(user.password())
                 .role(user.role())
                 .verified(user.isVerified())
+                .active(user.isActive())
                 .createdAt(user.createdAt())
                 .updatedAt(user.updatedAt())
                 .build();
@@ -26,6 +27,7 @@ public class UserCast {
                 entity.getPassword(),
                 entity.getRole(),
                 entity.isVerified(),
+                entity.isActive(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()
         );

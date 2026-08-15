@@ -11,7 +11,7 @@ import com.financial.api.shared.email.EmailTemplateUseCase;
 import com.financial.api.shared.exception.BusinessException;
 import com.financial.api.shared.email.EmailPort;
 import com.financial.api.shared.transaction.TransactionManager;
-import com.financial.api.user.application.port.out.UserAuthenticationPort;
+import com.financial.api.user.application.port.out.UserAuthenticationPersistencePort;
 import com.financial.api.user.application.port.out.UserRepositoryPort;
 import com.financial.api.user.domain.User;
 
@@ -20,7 +20,7 @@ public class SignUpService implements SignUpUseCase {
     private static final String SUCCESS_MESSAGE =
             "If the registration can proceed, a verification code has been sent to the provided email.";
 
-    private final UserAuthenticationPort userAuthenticationPort;
+    private final UserAuthenticationPersistencePort userAuthenticationPort;
     private final UserRepositoryPort userRepositoryPort;
     private final EmailVerificationTokenPort emailVerificationTokenRepositoryPort;
 
@@ -33,7 +33,7 @@ public class SignUpService implements SignUpUseCase {
     private final TransactionManager transactionManager;
 
     public SignUpService(
-            UserAuthenticationPort userAuthenticationPort,
+            UserAuthenticationPersistencePort userAuthenticationPort,
             UserRepositoryPort userRepositoryPort,
             EmailVerificationTokenPort emailVerificationTokenRepositoryPort,
             HashPasswordUseCase hashPasswordUseCase,

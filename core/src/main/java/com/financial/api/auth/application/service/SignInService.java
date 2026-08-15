@@ -7,14 +7,14 @@ import com.financial.api.auth.application.port.in.password.ComparePasswordUseCas
 import com.financial.api.auth.application.port.in.refresh.GenerateRefreshTokenUseCase;
 import com.financial.api.auth.application.port.in.refresh.HashRefreshTokenUseCase;
 import com.financial.api.auth.application.port.in.sign.SignInUseCase;
-import com.financial.api.auth.application.port.out.RefreshTokenRepositoryPort;
+import com.financial.api.auth.application.port.out.RefreshTokenPersistencePort;
 import com.financial.api.auth.domain.RefreshToken;
 import com.financial.api.shared.email.EmailMessage;
 import com.financial.api.shared.email.EmailPort;
 import com.financial.api.shared.email.EmailTemplateUseCase;
 import com.financial.api.shared.exception.BusinessException;
 import com.financial.api.shared.exception.NotFoundException;
-import com.financial.api.user.application.port.out.UserAuthenticationPort;
+import com.financial.api.user.application.port.out.UserAuthenticationPersistencePort;
 import com.financial.api.user.domain.User;
 
 import java.time.LocalDateTime;
@@ -23,24 +23,24 @@ import java.time.format.DateTimeFormatter;
 
 public class SignInService implements SignInUseCase {
 
-    private final UserAuthenticationPort userAuthenticationPort;
+    private final UserAuthenticationPersistencePort userAuthenticationPort;
     private final ComparePasswordUseCase comparePasswordUseCase;
     private final GenerateAccessTokenUseCase generateAccessTokenUseCase;
     private final GenerateRefreshTokenUseCase generateRefreshTokenUseCase;
     private final HashRefreshTokenUseCase hashRefreshTokenUseCase;
-    private final RefreshTokenRepositoryPort refreshTokenRepositoryPort;
+    private final RefreshTokenPersistencePort refreshTokenRepositoryPort;
 
     private final EmailPort emailPort;
     private final EmailTemplateUseCase emailTemplateUseCase;
 
 
     public SignInService(
-            UserAuthenticationPort userAuthenticationPort,
+            UserAuthenticationPersistencePort userAuthenticationPort,
             ComparePasswordUseCase comparePasswordUseCase,
             HashRefreshTokenUseCase hashRefreshTokenUseCase,
             GenerateRefreshTokenUseCase generateRefreshTokenUseCase,
             GenerateAccessTokenUseCase generateAccessTokenUseCase,
-            RefreshTokenRepositoryPort refreshTokenRepositoryPort,
+            RefreshTokenPersistencePort refreshTokenRepositoryPort,
             EmailPort emailPort,
             EmailTemplateUseCase emailTemplateUseCase
         ){
@@ -62,6 +62,8 @@ public class SignInService implements SignInUseCase {
 
 
         if (!user.isVerified()) throw new BusinessException("Email not verified yet");
+
+        if (!user.isActive()) throw new BusinessException("User not Active");
 
         boolean passwordMatches = comparePasswordUseCase.execute(
                 password,

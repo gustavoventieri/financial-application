@@ -34,6 +34,9 @@
         @Column(name = "is_verified", nullable = false)
         private boolean verified;
 
+        @Column(name = "is_active", nullable = false)
+        private boolean active;
+
         @Column(name = "created_at", nullable = false, updatable = false)
         private LocalDateTime createdAt;
 

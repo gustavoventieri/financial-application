@@ -10,7 +10,7 @@ import com.financial.api.auth.application.service.SignUpService;
 import com.financial.api.shared.email.EmailPort;
 import com.financial.api.shared.email.EmailTemplateUseCase;
 import com.financial.api.shared.transaction.TransactionManager;
-import com.financial.api.user.application.port.out.UserAuthenticationPort;
+import com.financial.api.user.application.port.out.UserAuthenticationPersistencePort;
 import com.financial.api.user.application.port.out.UserRepositoryPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +20,7 @@ public class SignUpBeanConfig {
 
     @Bean
     public SignUpUseCase signUpUseCaseBean(
-            UserAuthenticationPort userAuthenticationPort,
+            UserAuthenticationPersistencePort userAuthenticationPort,
             UserRepositoryPort userRepositoryPort,
             EmailVerificationTokenPort emailVerificationTokenRepositoryPort,
             HashPasswordUseCase hashPasswordUseCase,
