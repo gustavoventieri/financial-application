@@ -5,25 +5,19 @@ import com.financial.api.user.application.port.in.DeleteUserByIdUseCase;
 import com.financial.api.user.application.port.in.FindUserByEmailUseCase;
 import com.financial.api.user.application.port.in.FindUserByIdUseCase;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@SecurityRequirement(name = "Bearer Authentication")
+@RestController("/users")
 public class UserController {
 
-   private final CreateUserUseCase createUserUseCase;
-   private final DeleteUserByIdUseCase deleteUserByIdUseCase;
-   private final FindUserByEmailUseCase findUserByEmailUseCase;
-   private final FindUserByIdUseCase findUserByIdUseCase;
 
 
-   public UserController(
-           CreateUserUseCase createUserUseCase,
-           DeleteUserByIdUseCase deleteUserByIdUseCase,
-           FindUserByIdUseCase findUserByIdUseCase,
-           FindUserByEmailUseCase findUserByEmailUseCase
-   ){
-      this.createUserUseCase = createUserUseCase;
-      this.deleteUserByIdUseCase = deleteUserByIdUseCase;
-      this.findUserByEmailUseCase = findUserByEmailUseCase;
-      this.findUserByIdUseCase = findUserByIdUseCase;
+   @GetMapping
+   public ResponseEntity<String> getUsers(){
+      return ResponseEntity.status(HttpStatus.OK).body("teste");
    }
+
 }
