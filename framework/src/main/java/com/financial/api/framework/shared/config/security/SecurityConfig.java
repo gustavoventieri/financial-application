@@ -1,7 +1,9 @@
 package com.financial.api.framework.shared.config.security;
 
+import com.financial.api.framework.shared.handler.GlobalExceptionHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -10,14 +12,18 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final SecurityFilter securityFilter;
+    private final GlobalExceptionHandler globalExceptionHandler;
 
     public SecurityConfig(
-            SecurityFilter securityFilter
+            SecurityFilter securityFilter,
+            GlobalExceptionHandler globalExceptionHandler
     ) {
         this.securityFilter = securityFilter;
+        this.globalExceptionHandler = globalExceptionHandler;
     }
 
     @Bean
@@ -30,15 +36,21 @@ public class SecurityConfig {
                         .csrfTokenRepository(
                                 CookieCsrfTokenRepository.withHttpOnlyFalse()
                         )
+                        .ignoringRequestMatchers(
+                                SecurityEndpoints.CSRF_IGNORED_ENDPOINTS
+                        )
                 )
                 .authorizeHttpRequests(auth -> auth
-
                         .requestMatchers(
-                                "/auth/sign-in",
-                                "/auth/sign-up",
-                                "/auth/verify-email"
-                        ).permitAll()
-                        .anyRequest().authenticated()
+                                SecurityEndpoints.PUBLIC_ENDPOINTS
+                        )
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated()
+                )
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(globalExceptionHandler)
+                        .accessDeniedHandler(globalExceptionHandler)
                 )
                 .addFilterBefore(
                         securityFilter,

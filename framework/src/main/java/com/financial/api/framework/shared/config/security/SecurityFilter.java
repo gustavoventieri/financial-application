@@ -62,14 +62,20 @@ public class SecurityFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+
+        String path = request.getRequestURI()
+                .substring(request.getContextPath().length());
+
+        return SecurityEndpoints.isPublic(path);
+    }
+
 
     private String getAccessToken(HttpServletRequest request) {
 
         Cookie[] cookies = request.getCookies();
 
-        if (cookies == null) {
-            throw new BusinessException("Access token not found");
-        }
 
         for (Cookie cookie : cookies) {
 
@@ -78,6 +84,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             }
         }
 
-        throw new BusinessException("Access token not found");
+
+        return null;
     }
 }

@@ -24,6 +24,8 @@ public class JwtAccessTokenValidator implements ValidateAccessTokenUseCase {
 
     @Override
     public boolean execute(String token) {
+        if (token == null) return false;
+
         try {
             verifier.verify(token);
             return true;
